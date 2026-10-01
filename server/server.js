@@ -9,11 +9,17 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
 // Fail fast if a required secret is missing
 if (!process.env.JWT_SECRET || !process.env.MONGO_URI) {
-  console.error("Missing JWT_SECRET or MONGO_URI. Check your server/.env file.");
+  console.error(
+    "Missing JWT_SECRET or MONGO_URI. Check your server/.env file.",
+  );
   process.exit(1);
 }
 
 const app = express();
+const clientUrl = (process.env.CLIENT_URL || "http://localhost:5173").replace(
+  /\/$/,
+  "",
+);
 
 // Needed on Render/Heroku etc. so secure cookies work behind a proxy
 if (process.env.NODE_ENV === "production") {
@@ -27,9 +33,9 @@ app.use(helmet());
 // Never use "*" together with credentials.
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: clientUrl,
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json()); // read JSON request bodies
@@ -49,6 +55,8 @@ const PORT = process.env.PORT || 5000;
 
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    console.log(
+      `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`,
+    );
   });
 });
