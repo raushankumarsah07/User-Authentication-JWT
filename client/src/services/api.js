@@ -4,7 +4,9 @@ import axios from "axios";
 // withCredentials: true makes the browser send and receive cookies
 // (our HTTP-only JWT cookie) on cross-origin requests.
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8080/api",
+  baseURL:
+    import.meta.env.VITE_API_URL ||
+    "https://user-authentication-jwt-e3lo.onrender.com/api",
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });
